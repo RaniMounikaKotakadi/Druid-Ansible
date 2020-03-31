@@ -1,0 +1,5 @@
+- hosts: druid-servers
+  gather_facts: yes
+  become: yes
+  roles:
+    - single-node
