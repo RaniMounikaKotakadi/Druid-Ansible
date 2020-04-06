@@ -1,0 +1,88 @@
+[all]
+54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem
+3.95.188.204 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem
+
+[druid]
+54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem
+
+[historical]
+54.211.82.186 ansible_ssh_host=54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem druid_role=historical
+
+[middleManager]
+54.211.82.186 ansible_ssh_host=54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem druid_role=middleManager
+
+[realtime]
+54.211.82.186 ansible_ssh_host=54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem druid_role=realtime
+
+[brokers]
+54.211.82.186 ansible_ssh_host=54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem druid_role=brokers
+
+[overload]
+54.211.82.186 ansible_ssh_host=54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem druid_role=overlord
+
+[coordinator]
+54.211.82.186 ansible_ssh_host=54.211.82.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem druid_role=coordinator
+
+[mysql]
+3.95.188.204 ansible_ssh_host=3.95.188.204 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem 
+[zookeeper]
+3.95.188.204 ansible_ssh_host=3.95.188.204 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/Users/mounika/druid/Druid-Ansible/ansible/druid.pem
+
+[coordinator:vars]
+port=8080
+
+[brokers:vars]
+port=8080
+
+[historical:vars]
+port=7080
+
+[overload:vars]
+port=8080
+task_storage_type=hdfs
+task_log_type=local
+task_log_directory=/druid/logs/tasks
+
+[middleManager:vars]
+indexer_start_port=8082
+processing_buffer_size=536870912
+middle_manager_processing_threads=4
+indexer_fork_port=8083
+indexer_fork_threads=3
+indexer_fork_http_threads=32
+port=8081
+
+
+[druid:children]
+overload
+historical
+middleManager
+coordinator
+brokers
+
+[druid:vars]
+deep_storage_type=hdfs
+deep_storage_location=/druid/data/datasources
+namenode_host=host8.yourcompany.net
+namenode_port=8020
+hadoop_user=hdfs
+zookeeper=host8.yourcompany.net:2181
+mysql_connect_uri=jdbc:mysql://host8.yourcompany.net:3306/druid
+mysql_druid_user=druid
+mysql_druid_password=diurd
+segment_cache_location=/app/druid/segment-cache
+druid_conf_dir=/etc/druid/conf
+druid_tmpdir=/tmp/
+metadata_storage_type=mysql
+mysql_artifact=mysql:mysql-connector-java:5.1.6
+metadata_artifact=io.druid.extensions:mysql-metadata-storage:0.7.1
+hdfsstorage_artifact=io.druid.extensions:druid-hdfs-storage:0.7.1
+hadoopclient_artifact=org.apache.hadoop:hadoop-client:2.6.0
+druid_maven_repo=https://metamx.artifactoryonline.com/metamx/libs-releases
+[all:vars]
+druid_version=0.15.0
+sudouser=sudouser
+http_proxy_host=
+http_proxy_port=80
+non_proxy_hosts='"*.yourdomain.com|*.yourdomain.net"'
+hadoop_client_libs_path=/usr/hdp/2.2.0.0-2041/hadoop/client/*
